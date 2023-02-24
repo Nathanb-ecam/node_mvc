@@ -1,17 +1,11 @@
 let Booking = require('../models/bookingModel');
 let Passenger = require('../models/passengerModel');
 
-let Passengers = [];
 
 exports.bookingInfo = function (req,res){
     let insurance =req.body.insurance != undefined ?1:0;
     req.session.booking = new Booking(req.body.dest,req.body.seats,insurance);
-
-    req.session.dest = req.body.dest;
-    req.session.seats = req.body.seats;
-    req.session.insurance = req.body.insurance != undefined ?1:0;
-    let booking = new Booking(req.session.dest,req.session.seats,req.session.insurance);
-    res.render('passengersEncoding.ejs',{booking:booking});
+    res.render('passengersEncoding.ejs',{booking:req.session.booking});
 }
  
 exports.bookingPrice = function (req,res){
@@ -23,25 +17,22 @@ exports.bookingPrice = function (req,res){
 } 
 
 exports.passengersEncoding = function (req,res){
-    for(let i = 0;i<req.session.seats;i++){
-        if(req.session.seats ==1){
-            Passengers.push(new Passenger(req.body.name,req.body.age));
+    let booking = req.session.booking;
+    for(let i = 0;i<booking.seats;i++){
+        if(booking.seats ==1){
+            booking.passengers.push(new Passenger(req.body.name,req.body.age));
             break;
         }
-        Passengers.push(new Passenger(req.body.name[i],req.body.age[i]));
+        booking.passengers.push(new Passenger(req.body.name[i],req.body.age[i]));
     };
-    req.session.names = req.body.name;
-    req.session.ages = req.body.age;
-    res.render('validation.ejs',{booking:new Booking(req.session.dest,req.session.seats,req.session.insurance),passengers:Passengers});
+
+    res.render('validation.ejs',{booking:booking,passengers:booking.passengers});
 } 
 
 exports.bookingConfirmation = function (req,res){
     // stocker dans la bdd
     let connection = require('../db.js');
-
-
-    let booking = new Booking(req.session.dest,req.session.seats,req.session.insurance);
-    let numberPassengers = req.session.seats;
+    let booking = req.session.booking;
 
     // register booking
     connection.query(`INSERT INTO Booking (dest,seats,insurance,reservationId) VALUES ('${booking.dest}','${booking.seats}','${booking.insurance}','${booking.reservationId}') `, function(error,result){
@@ -50,20 +41,16 @@ exports.bookingConfirmation = function (req,res){
             console.log(error);
         }else{
             console.log('Booking registered in db ');
-            // res.render('confirmation.ejs');
         }
     });
 
-    // register passengers
-    // booking.passengers.forEach{
-        
-    // }
-    for(let i = 0;i<numberPassengers;i++){
-        connection.query(`INSERT INTO Passengers (name,age,fk_reservation) VALUES ('${Passengers[i].name}',${Passengers[i].age},'${booking.reservationId}')`, function(error,result){
+
+    for(let i = 0;i<booking.seats;i++){
+        connection.query(`INSERT INTO Passengers (name,age,fk_reservation) VALUES ('${booking.passengers[i].name}',${booking.passengers[i].age},'${booking.reservationId}')`, function(error,result){
             if(error){
                 res.status(400).send(error);
             }else{
-                console.log(`Passenger n°${i} registered in db`);
+                console.log(`Passenger ${booking.passengers[i].name} registered in db`);
             }
         });
     }

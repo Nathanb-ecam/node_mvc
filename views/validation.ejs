@@ -5,20 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css">
+
 </head>
 <body>
-    <h1>Validation des réservations</h1>
-    <h2>Destination : <%= booking.dest %></h2>
-    <h2>Liste des passagers</h2>
-    <ul>
-        <% for(let i = 0;i<booking.seats;i++){%>
-            <li><%=passengers[i].name%></li>
-            <li><%=passengers[i].age%></li>
-        <%}%>
-    </ul>
-    <form action="/confirmation" method="post">
-        <input type="submit" value="Etape suivante">
-        <input type="submit" value="Annuler la réservation" formaction="/cancel">
-    </form>
+    <div class="container">
+        <h1>Validation des réservations</h1>
+        <h2>Destination : <%= booking.dest %></h2>
+        <h2>Liste des passagers</h2>
+        <div class="passengers">
+            <ul>
+                <% for(let i = 0;i<booking.seats;i++){%>
+                    <li><%=passengers[i].name%> <%=passengers[i].age%> ans</li>
+                <%}%>
+            </ul>
+        </div>
+        
+
+        <form action="/confirmation" method="post">
+            <input type="submit" value="Etape suivante">
+            <input type="submit" value="Annuler la réservation" formaction="/cancel">
+        </form>
+    </div>
+
 </body>
 </html>
