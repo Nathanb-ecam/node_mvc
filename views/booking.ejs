@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Réservation</h1>
+    <form action="/booking" method="post">
+        <p><label>Detination</label><input type="text" name="dest" value=<%= booking.dest%>></p>
+        <p><label>Nombre de places</label><input type="number" name="seats" value=<%= booking.seats%>></p>
+        <p><label>Assurance</label><input type="checkbox" name="insurance" value=<%= booking.insurance%>></p>
+        <input type="submit" value="Etape suivante">
+        <input type="submit" value="Calculer prix" formaction='/totalPrice'>
+    </form>
+    <p class="price"><%= message %><%= price%></p>
+</body>
+</html>
