@@ -13,7 +13,7 @@ exports.bookingPrice = function (req,res){
     let seats = req.body.seats == null ? 0: req.body.seats; ;
     let booking = new Booking(req.body.dest,seats,insurance);
     let price = booking.getPrice()
-    res.render('booking.ejs',{booking:booking,price:price,message:'Cout total de la réservation'});
+    res.render('booking.ejs',{booking:booking,price:price,message:'Cout total de la réservation '});
 } 
 
 exports.passengersEncoding = function (req,res){
